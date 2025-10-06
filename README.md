@@ -1,118 +1,118 @@
 # DailyBox
 
-DailyBox, günlük hayatınızı kolaylaştıran minimalist bir utility uygulamasıdır. Modern ve temiz bir arayüzle, günlük ihtiyaçlarınız için gerekli araçları bir araya getirir.
+DailyBox is a minimalist utility application that simplifies your daily life. With a modern and clean interface, it brings together the essential tools you need for your daily tasks.
 
-## 🌟 Özellikler
+## 🌟 Features
 
-### 📝 Notlar
-- Hızlı not alma
-- Zaman damgası ve konum kaydetme
-- Not düzenleme ve silme
-- Minimalist not görünümü
+### 📝 Notes
+- Quick note-taking
+- Timestamp and location recording
+- Note editing and deletion
+- Minimalist note view
 
-### 💰 Bütçe Takibi
-- Çoklu para birimi desteği (USD, EUR, TRY, GBP, vb.)
-- Gelir ve gider takibi
-- Açıklama ekleme
-- Para birimi bazında özetler
-- Otomatik bakiye hesaplama
+### 💰 Budget Tracking
+- Multi-currency support (USD, EUR, TRY, GBP, etc.)
+- Income and expense tracking
+- Add descriptions
+- Currency-based summaries
+- Automatic balance calculation
 
-### 📱 QR Kod
-- QR kod oluşturma
-- QR kod tarama (simülasyon)
-- Metin, URL ve e-posta desteği
-- Oluşturulan kodları kopyalama
+### 📱 QR Code
+- QR code generation
+- QR code scanning (simulation)
+- Text, URL, and email support
+- Copy generated codes
 
-### 🔗 Link Kısaltıcı
-- is.gd API entegrasyonu
-- Özel alias desteği
-- Link geçmişi
-- Tek tıkla kopyalama
+### 🔗 Link Shortener
+- is.gd API integration
+- Custom alias support
+- Link history
+- One-click copy
 
-### 🔄 Dosya Dönüştürücü
-- Resim to PDF dönüştürme
-- Çoklu resim seçimi
-- Galeri ve dosya seçici desteği
-- Gelecek özellikler için hazır altyapı
+### 🔄 File Converter
+- Image to PDF conversion
+- Multiple image selection
+- Gallery and file picker support
+- Ready infrastructure for future features
 
-## 🎨 Tema Desteği
+## 🎨 Theme Support
 
-- **Açık Tema**: Minimalist beyaz tasarım
-- **Koyu Tema**: Göz dostu koyu tasarım
-- **Sistem Teması**: Otomatik tema seçimi
-- Anlık tema değiştirme
+- **Light Theme**: Minimalist white design
+- **Dark Theme**: Eye-friendly dark design
+- **System Theme**: Automatic theme selection
+- Instant theme switching
 
-## 📱 Platform Desteği
+## 📱 Platform Support
 
 - Android
 - iOS
 - Web
 
-## 🛠️ Teknik Özellikler
+## 🛠️ Technical Features
 
-### Kullanılan Teknolojiler
+### Technologies Used
 - **Framework**: Flutter 3.x
 - **State Management**: Provider
-- **Veritabanı**: SQLite
-- **HTTP İstekleri**: HTTP package
-- **Konum Servisleri**: Geolocator
-- **QR Kod**: qr_flutter
-- **Dosya İşlemleri**: file_picker, path_provider
-- **PDF Oluşturma**: pdf package
+- **Database**: SQLite
+- **HTTP Requests**: HTTP package
+- **Location Services**: Geolocator
+- **QR Code**: qr_flutter
+- **File Operations**: file_picker, path_provider
+- **PDF Generation**: pdf package
 
-### Veri Saklama
-- Tüm veriler yerel SQLite veritabanında saklanır
-- Kullanıcı aktiviteleri zaman damgası ve konum bilgisi ile kaydedilir
-- Güvenli ve hızlı veri erişimi
+### Data Storage
+- All data is stored in a local SQLite database
+- User activities are recorded with timestamps and location information
+- Secure and fast data access
 
-### İzinler
-- **İnternet**: Link kısaltıcı API'si için
-- **Konum**: Aktivite konumlarını kaydetmek için
-- **Kamera**: QR kod tarama için
-- **Depolama**: Dosya işlemleri için
+### Permissions
+- **Internet**: For link shortener API
+- **Location**: To record activity locations
+- **Camera**: For QR code scanning
+- **Storage**: For file operations
 
-## 🚀 Kurulum
+## 🚀 Installation
 
-1. Flutter SDK'nın yüklü olduğundan emin olun
-2. Projeyi klonlayın
-3. Bağımlılıkları yükleyin:
+1. Make sure Flutter SDK is installed
+2. Clone the project
+3. Install dependencies:
    ```bash
    flutter pub get
    ```
-4. Uygulamayı çalıştırın:
+4. Run the application:
    ```bash
    flutter run
    ```
 
-## 📁 Proje Yapısı
+## 📁 Project Structure
 
 ```
 lib/
-├── main.dart              # Ana uygulama dosyası
-├── models/                # Veri modelleri
-├── screens/               # Ekran widget'ları
-├── services/              # İş mantığı servisleri
-├── theme/                 # Tema konfigürasyonu
-└── widgets/               # Yeniden kullanılabilir widget'lar
+├── main.dart              # Main application file
+├── models/                # Data models
+├── screens/               # Screen widgets
+├── services/              # Business logic services
+├── theme/                 # Theme configuration
+└── widgets/               # Reusable widgets
 ```
 
-## 🔮 Gelecek Özellikler
+## 🔮 Future Features
 
-- **Harita Entegrasyonu**: Aktivitelerin harita üzerinde görüntülenmesi
-- **Daha Fazla Dosya Dönüştürücü**: Audio, video ve dokuman dönüştürme
-- **Backup & Sync**: Bulut yedekleme
-- **Widget'lar**: Ana ekran widget desteği
-- **Kategoriler**: Not ve bütçe kategorileri
-- **İstatistikler**: Kullanım analitikleri
+- **Map Integration**: Displaying activities on a map
+- **More File Converters**: Audio, video, and document conversion
+- **Backup & Sync**: Cloud backup
+- **Widgets**: Home screen widget support
+- **Categories**: Note and budget categories
+- **Statistics**: Usage analytics
 
-## 🎯 Hedef Kitle
+## 🎯 Target Audience
 
-DailyBox, günlük yaşamda küçük ama önemli görevleri hızlı ve etkili bir şekilde yapmak isteyen herkes için tasarlanmıştır. Minimalist tasarımı sayesinde teknik bilgisi olmayan kullanıcılar bile kolayca kullanabilir.
+DailyBox is designed for anyone who wants to quickly and effectively accomplish small but important tasks in their daily life. Thanks to its minimalist design, even users without technical knowledge can easily use it.
 
-## 📄 Lisans
+## 📄 License
 
-Bu proje MIT lisansı altında dağıtılmaktadır.
+This project is distributed under the MIT License.
 
 ---
 
-**DailyBox** - Günlük yaşamınızı kolaylaştıran minimalist arkadaşınız 📦✨
+**DailyBox** - Your minimalist companion that simplifies your daily life 📦✨
