@@ -5,6 +5,7 @@ import '../models/models.dart';
 class DatabaseService {
   static final DatabaseService _instance = DatabaseService._internal();
   factory DatabaseService() => _instance;
+  static DatabaseService get instance => _instance;
   DatabaseService._internal();
 
   static Database? _database;
@@ -19,12 +20,14 @@ class DatabaseService {
     String path = join(await getDatabasesPath(), 'dailybox.db');
     return await openDatabase(
       path,
-      version: 1,
+      version: 2,
       onCreate: _onCreate,
+      onUpgrade: _onUpgrade,
     );
   }
 
   Future<void> _onCreate(Database db, int version) async {
+    // User Activities table
     await db.execute('''
       CREATE TABLE user_activities(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -37,6 +40,7 @@ class DatabaseService {
       )
     ''');
 
+    // Notes table
     await db.execute('''
       CREATE TABLE notes(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -48,73 +52,66 @@ class DatabaseService {
       )
     ''');
 
+    // Budget entries table
     await db.execute('''
       CREATE TABLE budget_entries(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        currency TEXT NOT NULL,
+        title TEXT NOT NULL,
         amount REAL NOT NULL,
-        description TEXT NOT NULL,
-        is_income INTEGER NOT NULL,
-        timestamp INTEGER NOT NULL,
+        type TEXT NOT NULL,
+        category TEXT NOT NULL,
+        date TEXT NOT NULL,
+        latitude REAL,
+        longitude REAL
+      )
+    ''');
+
+    // Todo items table
+    await db.execute('''
+      CREATE TABLE todos(
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        title TEXT NOT NULL,
+        content TEXT,
+        isCompleted INTEGER NOT NULL DEFAULT 0,
+        priority TEXT NOT NULL DEFAULT 'medium',
+        dueDate TEXT,
+        createdAt INTEGER NOT NULL,
         latitude REAL,
         longitude REAL
       )
     ''');
   }
 
-  // User Activities
-  Future<int> insertActivity(UserActivity activity) async {
-    final db = await database;
-    return await db.insert('user_activities', activity.toMap());
+  Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
+    if (oldVersion < 2) {
+      await db.execute('''
+        CREATE TABLE todos(
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          title TEXT NOT NULL,
+          content TEXT,
+          isCompleted INTEGER NOT NULL DEFAULT 0,
+          priority TEXT NOT NULL DEFAULT 'medium',
+          dueDate TEXT,
+          createdAt INTEGER NOT NULL,
+          latitude REAL,
+          longitude REAL
+        )
+      ''');
+    }
   }
 
-  Future<List<UserActivity>> getAllActivities() async {
-    final db = await database;
-    final List<Map<String, dynamic>> maps = await db.query('user_activities',
-        orderBy: 'timestamp DESC');
-    return List.generate(maps.length, (i) {
-      return UserActivity.fromMap(maps[i]);
-    });
-  }
-
-  Future<List<UserActivity>> getActivitiesByType(String type) async {
-    final db = await database;
-    final List<Map<String, dynamic>> maps = await db.query(
-      'user_activities',
-      where: 'type = ?',
-      whereArgs: [type],
-      orderBy: 'timestamp DESC',
-    );
-    return List.generate(maps.length, (i) {
-      return UserActivity.fromMap(maps[i]);
-    });
-  }
-
-  // Notes
-  Future<int> insertNote(Note note) async {
-    final db = await database;
-    final id = await db.insert('notes', note.toMap());
-    
-    // Also insert as activity
-    await insertActivity(UserActivity(
-      type: ActivityType.note,
-      title: note.title,
-      content: note.content,
-      latitude: note.latitude,
-      longitude: note.longitude,
-      timestamp: note.timestamp,
-    ));
-    
-    return id;
-  }
-
+  // Notes methods
   Future<List<Note>> getAllNotes() async {
     final db = await database;
-    final List<Map<String, dynamic>> maps = await db.query('notes',
-        orderBy: 'timestamp DESC');
+    final List<Map<String, dynamic>> maps = await db.query('notes');
     return List.generate(maps.length, (i) {
       return Note.fromMap(maps[i]);
     });
+  }
+
+  Future<int> insertNote(Note note) async {
+    final db = await database;
+    return await db.insert('notes', note.toMap());
   }
 
   Future<int> updateNote(Note note) async {
@@ -136,58 +133,83 @@ class DatabaseService {
     );
   }
 
-  // Budget Entries
-  Future<int> insertBudgetEntry(BudgetEntry entry) async {
-    final db = await database;
-    final id = await db.insert('budget_entries', entry.toMap());
-    
-    // Also insert as activity
-    await insertActivity(UserActivity(
-      type: ActivityType.budget,
-      title: '${entry.isIncome ? '+' : '-'}${entry.amount} ${entry.currency}',
-      content: entry.description,
-      latitude: entry.latitude,
-      longitude: entry.longitude,
-      timestamp: entry.timestamp,
-    ));
-    
-    return id;
-  }
-
+  // Budget methods
   Future<List<BudgetEntry>> getAllBudgetEntries() async {
     final db = await database;
-    final List<Map<String, dynamic>> maps = await db.query('budget_entries',
-        orderBy: 'timestamp DESC');
+    final List<Map<String, dynamic>> maps = await db.query('budget_entries');
     return List.generate(maps.length, (i) {
       return BudgetEntry.fromMap(maps[i]);
     });
   }
 
-  Future<Map<String, double>> getBudgetSummary() async {
+  Future<int> insertBudgetEntry(BudgetEntry entry) async {
     final db = await database;
-    final List<Map<String, dynamic>> results = await db.rawQuery('''
-      SELECT currency, 
-             SUM(CASE WHEN is_income = 1 THEN amount ELSE 0 END) as income,
-             SUM(CASE WHEN is_income = 0 THEN amount ELSE 0 END) as expense,
-             SUM(CASE WHEN is_income = 1 THEN amount ELSE -amount END) as balance
-      FROM budget_entries 
-      GROUP BY currency
-    ''');
-    
-    Map<String, double> summary = {};
-    for (var result in results) {
-      summary['${result['currency']}_balance'] = result['balance'];
-      summary['${result['currency']}_income'] = result['income'];
-      summary['${result['currency']}_expense'] = result['expense'];
-    }
-    
-    return summary;
+    return await db.insert('budget_entries', entry.toMap());
   }
 
   Future<int> deleteBudgetEntry(int id) async {
     final db = await database;
     return await db.delete(
       'budget_entries',
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+  }
+
+  // User Activity methods
+  Future<List<UserActivity>> getAllActivities() async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.query('user_activities');
+    return List.generate(maps.length, (i) {
+      return UserActivity.fromMap(maps[i]);
+    });
+  }
+
+  Future<List<UserActivity>> getActivitiesByType(String type) async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.query(
+      'user_activities',
+      where: 'type = ?',
+      whereArgs: [type],
+    );
+    return List.generate(maps.length, (i) {
+      return UserActivity.fromMap(maps[i]);
+    });
+  }
+
+  Future<int> insertActivity(UserActivity activity) async {
+    final db = await database;
+    return await db.insert('user_activities', activity.toMap());
+  }
+
+  // Todo methods
+  Future<List<Todo>> getTodos() async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.query('todos');
+    return List.generate(maps.length, (i) {
+      return Todo.fromMap(maps[i]);
+    });
+  }
+
+  Future<int> insertTodo(Todo todo) async {
+    final db = await database;
+    return await db.insert('todos', todo.toMap());
+  }
+
+  Future<int> updateTodo(Todo todo) async {
+    final db = await database;
+    return await db.update(
+      'todos',
+      todo.toMap(),
+      where: 'id = ?',
+      whereArgs: [todo.id],
+    );
+  }
+
+  Future<int> deleteTodo(int id) async {
+    final db = await database;
+    return await db.delete(
+      'todos',
       where: 'id = ?',
       whereArgs: [id],
     );

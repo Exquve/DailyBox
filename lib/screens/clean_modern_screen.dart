@@ -6,6 +6,8 @@ import 'budget_screen.dart';
 import 'qr_screen.dart';
 import 'link_shortener_screen.dart';
 import 'file_converter_screen.dart';
+import 'todo_screen.dart';
+import 'map_screen.dart';
 
 class CleanModernScreen extends StatefulWidget {
   const CleanModernScreen({Key? key}) : super(key: key);
@@ -58,6 +60,22 @@ class _CleanModernScreenState extends State<CleanModernScreen> {
     },
     {
       'id': 5,
+      'title': 'Görev Listesi',
+      'subtitle': 'Yapılacaklar listesi',
+      'icon': Icons.checklist_rounded,
+      'color': const Color(0xFF4facfe),
+      'onTap': () {},
+    },
+    {
+      'id': 6,
+      'title': 'Aktivite Haritası',
+      'subtitle': 'Konum takibi',
+      'icon': Icons.map_rounded,
+      'color': const Color(0xFF667eea),
+      'onTap': () {},
+    },
+    {
+      'id': 7,
       'title': 'Yeni Özellikler',
       'subtitle': 'Çok yakında...',
       'icon': Icons.auto_awesome_rounded,
@@ -93,6 +111,14 @@ class _CleanModernScreenState extends State<CleanModernScreen> {
       context,
       MaterialPageRoute(builder: (context) => const FileConverterScreen()),
     );
+    features[5]['onTap'] = () => Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const TodoScreen()),
+    );
+    features[6]['onTap'] = () => Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const MapScreen()),
+    );
   }
 
   @override
@@ -115,7 +141,7 @@ class _CleanModernScreenState extends State<CleanModernScreen> {
                   crossAxisCount: 2,
                   mainAxisSpacing: 16,
                   crossAxisSpacing: 16,
-                  childAspectRatio: 1.1,
+                  childAspectRatio: 1.0,
                 ),
                 delegate: SliverChildBuilderDelegate(
                   (context, index) => _buildCleanFeatureCard(index),
