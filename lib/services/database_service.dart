@@ -65,39 +65,10 @@ class DatabaseService {
         longitude REAL
       )
     ''');
-
-    // Todo items table
-    await db.execute('''
-      CREATE TABLE todos(
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        title TEXT NOT NULL,
-        content TEXT,
-        isCompleted INTEGER NOT NULL DEFAULT 0,
-        priority TEXT NOT NULL DEFAULT 'medium',
-        dueDate TEXT,
-        createdAt INTEGER NOT NULL,
-        latitude REAL,
-        longitude REAL
-      )
-    ''');
   }
 
   Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
-    if (oldVersion < 2) {
-      await db.execute('''
-        CREATE TABLE todos(
-          id INTEGER PRIMARY KEY AUTOINCREMENT,
-          title TEXT NOT NULL,
-          content TEXT,
-          isCompleted INTEGER NOT NULL DEFAULT 0,
-          priority TEXT NOT NULL DEFAULT 'medium',
-          dueDate TEXT,
-          createdAt INTEGER NOT NULL,
-          latitude REAL,
-          longitude REAL
-        )
-      ''');
-    }
+    // Future database schema changes will go here
   }
 
   // Notes methods
@@ -180,38 +151,5 @@ class DatabaseService {
   Future<int> insertActivity(UserActivity activity) async {
     final db = await database;
     return await db.insert('user_activities', activity.toMap());
-  }
-
-  // Todo methods
-  Future<List<Todo>> getTodos() async {
-    final db = await database;
-    final List<Map<String, dynamic>> maps = await db.query('todos');
-    return List.generate(maps.length, (i) {
-      return Todo.fromMap(maps[i]);
-    });
-  }
-
-  Future<int> insertTodo(Todo todo) async {
-    final db = await database;
-    return await db.insert('todos', todo.toMap());
-  }
-
-  Future<int> updateTodo(Todo todo) async {
-    final db = await database;
-    return await db.update(
-      'todos',
-      todo.toMap(),
-      where: 'id = ?',
-      whereArgs: [todo.id],
-    );
-  }
-
-  Future<int> deleteTodo(int id) async {
-    final db = await database;
-    return await db.delete(
-      'todos',
-      where: 'id = ?',
-      whereArgs: [id],
-    );
   }
 }

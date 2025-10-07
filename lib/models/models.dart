@@ -4,7 +4,6 @@ class ActivityType {
   static const String qrCode = 'qr_code';
   static const String linkShortener = 'link_shortener';
   static const String fileConverter = 'file_converter';
-  static const String todo = 'todo';
   static const String mapLocation = 'map_location';
 }
 
@@ -215,59 +214,6 @@ class TodoItem {
       latitude: latitude ?? this.latitude,
       longitude: longitude ?? this.longitude,
       priority: priority ?? this.priority,
-    );
-  }
-}
-
-// Todo Model (simplified version for database)
-class Todo {
-  final int? id;
-  final String title;
-  final String? content;
-  final bool isCompleted;
-  final String priority;
-  final String? dueDate;
-  final int createdAt;
-  final double? latitude;
-  final double? longitude;
-
-  Todo({
-    this.id,
-    required this.title,
-    this.content,
-    this.isCompleted = false,
-    this.priority = 'medium',
-    this.dueDate,
-    required this.createdAt,
-    this.latitude,
-    this.longitude,
-  });
-
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'title': title,
-      'content': content,
-      'isCompleted': isCompleted ? 1 : 0,
-      'priority': priority,
-      'dueDate': dueDate,
-      'createdAt': createdAt,
-      'latitude': latitude,
-      'longitude': longitude,
-    };
-  }
-
-  factory Todo.fromMap(Map<String, dynamic> map) {
-    return Todo(
-      id: map['id'],
-      title: map['title'],
-      content: map['content'],
-      isCompleted: map['isCompleted'] == 1,
-      priority: map['priority'],
-      dueDate: map['dueDate'],
-      createdAt: map['createdAt'],
-      latitude: map['latitude'],
-      longitude: map['longitude'],
     );
   }
 }

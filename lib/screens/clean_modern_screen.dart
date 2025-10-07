@@ -6,7 +6,6 @@ import 'budget_screen.dart';
 import 'qr_screen.dart';
 import 'link_shortener_screen.dart';
 import 'file_converter_screen.dart';
-import 'todo_screen.dart';
 import 'map_screen.dart';
 
 class CleanModernScreen extends StatefulWidget {
@@ -60,14 +59,6 @@ class _CleanModernScreenState extends State<CleanModernScreen> {
     },
     {
       'id': 5,
-      'title': 'Görev Listesi',
-      'subtitle': 'Yapılacaklar listesi',
-      'icon': Icons.checklist_rounded,
-      'color': const Color(0xFF4facfe),
-      'onTap': () {},
-    },
-    {
-      'id': 6,
       'title': 'Aktivite Haritası',
       'subtitle': 'Konum takibi',
       'icon': Icons.map_rounded,
@@ -75,7 +66,7 @@ class _CleanModernScreenState extends State<CleanModernScreen> {
       'onTap': () {},
     },
     {
-      'id': 7,
+      'id': 6,
       'title': 'Yeni Özellikler',
       'subtitle': 'Çok yakında...',
       'icon': Icons.auto_awesome_rounded,
@@ -112,10 +103,6 @@ class _CleanModernScreenState extends State<CleanModernScreen> {
       MaterialPageRoute(builder: (context) => const FileConverterScreen()),
     );
     features[5]['onTap'] = () => Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const TodoScreen()),
-    );
-    features[6]['onTap'] = () => Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => const MapScreen()),
     );
